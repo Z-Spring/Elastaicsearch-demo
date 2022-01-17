@@ -1,2 +1,0 @@
-# Elastaicsearch-demo
-Elastaicsearch-demo
