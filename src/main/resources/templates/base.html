@@ -13,7 +13,6 @@
     <script>
         function search() {
             let keyword=$('#test2').val();
-            // id=this.id;
             $.ajax('/search2/'+keyword,{
                 dataType:'html',
             }).done(function (data){
