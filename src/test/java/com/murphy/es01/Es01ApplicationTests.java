@@ -19,6 +19,7 @@ import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.core.TimeValue;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
@@ -29,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.util.Scanner;
+
 
 @SpringBootTest
 class Es01ApplicationTests {
@@ -116,19 +119,33 @@ class Es01ApplicationTests {
     }
 
     /**
+     * 模糊搜索
      * search document
      */
     @Test
-    void searchDocument2() throws IOException {
-        //创建搜索请求
-        SearchRequest searchRequest = new SearchRequest();
-        //其他
+    void searchDocument2() throws IOException{
+        SearchRequest searchRequest = new SearchRequest("test002");
+
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query();
+        //这里需要注意一下，termQuery的key需要加上keyword
+//        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("name.keyword", "springboot详解");
+
+        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("name", "spring");
+        searchSourceBuilder.query(matchQueryBuilder);
+        searchSourceBuilder.highlighter();
+
         searchRequest.source(searchSourceBuilder);
-        //响应请求
-        restHighLevelClient.search(searchRequest,RequestOptions.DEFAULT);
-        //
+
+        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        System.out.println(objectMapper.writeValueAsString(searchResponse.getHits().getHits()));
+        System.out.println("*****************************************************");
+        System.out.println(objectMapper.writeValueAsString(searchResponse.getHits()));
+        System.out.println("*****************************************************");
+        for (SearchHit documentFields:searchResponse.getHits().getHits()){
+            System.out.println(documentFields.getSourceAsMap());
+        }
+
     }
+
 
 }
