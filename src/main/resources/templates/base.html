@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script src="jquery.js"></script>
+</head>
+<body>
+<div id="test">
+    <input type="search" id="test2" placeholder="搜你想搜~"  >
+    <input type="button" onclick="search()" value="搜索">
+    <p id="message"></p>
+    <script>
+        function search() {
+            let keyword=$('#test2').val();
+            // id=this.id;
+            $.ajax('/search2/'+keyword,{
+                dataType:'html',
+            }).done(function (data){
+                $('#message').html(data);
+                console.log('success'+data);
+            }).fail(function (xhr, status) {
+                console.log('失败: ' + xhr.status + ', 原因: ' + status);
+            })
+        }
+        /*function search() {
+            $.post("/test002/bookstore/",{
+                id:1
+            }).done(function (data){
+                console.log(data);
+                console.log("success"+data);
+            }).fail(function (xhr,status){
+                console.log('失败: ' + xhr.status + ', 原因: ' + status);
+            })
+        }*/
+    </script>
+</div>
+</body>
+</html>
